@@ -53,16 +53,16 @@ export class ChatGPTTranslate implements ITranslate {
 
     async translate(content: string, { to = 'auto' }: ITranslateOptions) {
 
-        const url = `https://api.openai.com/v1/chat/completions`;
+        const url = `http://localhost:11434/api/chat`;
 
         if(!this._defaultOption.authKey) {
             throw new Error('Please check the configuration of authKey!');
         }
-        let systemPrompt = "You are a translation engine that can only translate text and cannot interpret it.";
-        let userPrompt = `translate from en to zh-Hans`;
+        let systemPrompt = "你是一个程序代码注释翻译引擎，请在保留原始段落格式的情况下翻译文本，注意识别并保留段落中的专有名词，缩写和术语以及特定的概念或表达";
+        let userPrompt = `将以下英文翻译为简体中文`;
         userPrompt = `${userPrompt}:\n\n"${content}" =>`;
         const body = {
-            model: 'gpt-3.5-turbo',
+            // model: 'gpt-3.5-turbo',
             temperature: 0,
             max_tokens: 1000,
             top_p: 1,
@@ -98,7 +98,7 @@ export class ChatGPTTranslate implements ITranslate {
 
 
     link(content: string, { to = 'auto' }: ITranslateOptions) {
-        let str = `https://api.openai.com/v1/chat/completions/${convertLang(to)}/${encodeURIComponent(content)}`;
+        let str = `http://localhost:11434/api/chat`;
         return `[ChatGPT](${str})`;
     }
 
