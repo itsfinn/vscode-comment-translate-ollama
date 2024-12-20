@@ -1,6 +1,6 @@
 import { ITranslateRegistry } from 'comment-translate-manager';
 import * as vscode from 'vscode';
-import { ChatGPTTranslate } from './chatgptTranslate';
+import { OllamaTranslate } from './ollamaTranslate';
 
 export function activate(context: vscode.ExtensionContext) {
 	
@@ -8,7 +8,7 @@ export function activate(context: vscode.ExtensionContext) {
 	//Expose the plug-in
 	return {
         extendTranslate: function (registry: ITranslateRegistry) {
-            registry('chatgpt', ChatGPTTranslate);
+            registry('ollama', OllamaTranslate);
         }
     };
 }

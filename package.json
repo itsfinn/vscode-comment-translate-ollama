@@ -1,9 +1,9 @@
 {
-  "name": "chatgpt-comment-translate",
-  "displayName": "chatgpt-comment-translate",
-  "description": "chatgpt translate source for comment-translate",
+  "name": "ollama-comment-translate",
+  "displayName": "ollama-comment-translate",
+  "description": "ollama translate source for comment-translate",
   "version": "1.0.0",
-  "publisher": "kitiho",
+  "publisher": "itsfinn",
   "engines": {
     "vscode": "^1.63.0"
   },
@@ -13,18 +13,18 @@
   "keywords": [
     "translateSource",
     "comment translate",
-    "chatgpt",
-    "chatgpt translate",
+    "ollama",
+    "ollama translate",
     "翻译",
     "注释"
   ],
-  "homepage": "https://github.com/kitiho/vscode-comment-translate-chatgpt#readme",
+  "homepage": "https://github.com/itsfinn/vscode-comment-translate-ollama#readme",
   "bugs": {
-    "url": "https://github.com/kitiho/vscode-comment-translate-chatgpt/issues"
+    "url": "https://github.com/itsfinn/vscode-comment-translate-ollama/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kitiho/vscode-comment-translate-chatgpt.git"
+    "url": "https://github.com/itsfinn/vscode-comment-translate-ollama.git"
   },
   "activationEvents": [],
   "main": "./out/extension.js",
@@ -33,22 +33,10 @@
     "intellsmi.comment-translate"
   ],
   "contributes": {
-    "configuration": [
-      {
-        "title": "Chatgpt translate Configuration",
-        "type": "Object",
-        "properties": {
-          "chatgptTranslate.authKey": {
-            "type": "string",
-            "markdownDescription": "You need an authentication key to access to the API.[Accessing the API](https://openai.com)"
-          }
-        }
-      }
-    ],
     "translates": [
       {
-        "translate": "chatgpt",
-        "title": "ChatGPT translate"
+        "translate": "ollama",
+        "title": "Ollama translate"
       }
     ]
   },
