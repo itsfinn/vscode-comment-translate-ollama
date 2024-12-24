@@ -38,7 +38,25 @@
         "translate": "ollama",
         "title": "Ollama translate"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Comment Translate Ollama",
+      "description": "VScode Extension Comment Translate Ollama configurations",
+      "type":"Object",
+      "order": 1,
+      "properties": {
+        "vscode-comment-translate-ollama.systemPrompt": {
+          "type": "string",
+          "default": "你是一个程序代码注释翻译引擎。代码文件包含了多种编程语言编写的代码，其中涉及到 Golang、Rust、C 以及 Node.js 等语言。无论是单行注释（例如在 Golang 中以//开头、C 语言中以//或/* */包裹等形式），还是多行注释（像在 Rust 里/* */形式等），都请准确识别并翻译成符合中文表达习惯、语义清晰的内容，同时要保留原注释在代码中的位置以及相应的格式，确保翻译后的代码依然能够正常被相应的编译器或解释器识别并运行，尽量贴合代码上下文准确翻译每一条注释的含义。",
+          "description": "system prompt"
+        },
+        "vscode-comment-translate-ollama.userPrompt": {
+          "type": "string",
+          "default": "请将以下代码中的注释翻译为中文",
+          "description": "user prompt"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

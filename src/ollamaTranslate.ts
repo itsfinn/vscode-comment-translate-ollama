@@ -1,15 +1,14 @@
 
 import axios from 'axios';
-import { workspace } from 'vscode';
+import * as vscode from 'vscode';
 import { ITranslate, ITranslateOptions } from 'comment-translate-manager';
 
-const PREFIXCONFIG = 'ollamaTranslate';
+const PREFIXCONFIG = 'vscode-comment-translate-ollama';
 
 const langMaps: Map<string, string> = new Map([
     ['zh-CN', 'ZH'],
     ['zh-TW', 'ZH'],
 ]);
-// 你好吗
 
 function convertLang(src: string) {
     if (langMaps.has(src)) {
@@ -18,14 +17,10 @@ function convertLang(src: string) {
     return src.toLocaleUpperCase();
 }
 
-export function getConfig<T>(key: string): T | undefined {
-    let configuration = workspace.getConfiguration(PREFIXCONFIG);
-    return configuration.get<T>(key);
-}
-
-
 
 interface OllamaTranslateOption {
+    systemPrompt: string;
+    userPrompt: string;
 }
 
 export class OllamaTranslate implements ITranslate {
@@ -38,8 +33,9 @@ export class OllamaTranslate implements ITranslate {
     constructor() {
         console.log("constructor")
         this._defaultOption = this.createOption();
-        workspace.onDidChangeConfiguration(async eventNames => {
+        vscode.workspace.onDidChangeConfiguration(async eventNames => {
             if (eventNames.affectsConfiguration(PREFIXCONFIG)) {
+                console.log("updateOption: ", this._defaultOption)
                 this._defaultOption = this.createOption();
             }
         });
@@ -47,7 +43,10 @@ export class OllamaTranslate implements ITranslate {
 
     createOption() {
         console.log("createOption")
-        const defaultOption:OllamaTranslateOption = {        };
+        const defaultOption: OllamaTranslateOption = {
+            systemPrompt: "你是一个程序代码注释翻译引擎。代码文件包含了多种编程语言编写的代码，其中涉及到 Golang、Rust、C 以及 Node.js 等语言。无论是单行注释（例如在 Golang 中以//开头、C 语言中以//或/* */包裹等形式），还是多行注释（像在 Rust 里/* */形式等），都请准确识别并翻译成符合中文表达习惯、语义清晰的内容，同时要保留原注释在代码中的位置以及相应的格式，确保翻译后的代码依然能够正常被相应的编译器或解释器识别并运行，尽量贴合代码上下文准确翻译每一条注释的含义。",
+            userPrompt: "请将以下代码中的注释翻译为中文",
+        };
         return defaultOption;
     }
 
@@ -56,9 +55,10 @@ export class OllamaTranslate implements ITranslate {
         console.log("translate start")
         const url = `http://localhost:11434/api/chat`;
 
-        let systemPrompt = "你是一个程序代码注释翻译引擎，请在保留原始段落格式的情况下翻译文本，注意识别并保留段落中的专有名词，缩写和术语以及特定的概念或表达";
-        let userPrompt = `将以下英文翻译为简体中文`;
-        userPrompt = `${userPrompt}:\n\n"${content}" =>`;
+        let userPrompt =  this._defaultOption.userPrompt;
+        let systemPrompt = this._defaultOption.systemPrompt;
+
+        let prompt = `${userPrompt}:\n\n"${content}" =>`;
         const body = {
             stream: false,
             model: "llama3.1",
@@ -67,20 +67,20 @@ export class OllamaTranslate implements ITranslate {
             top_p: 1,
             frequency_penalty: 1,
             presence_penalty: 1,
-            messages:[
+            messages: [
                 {
                     role: "system",
                     content: systemPrompt,
                 },
-                { role: "user", content: userPrompt },
+                { role: "user", content: prompt },
             ]
         };
-        
+
         const headers = {
             "Content-Type": "application/json",
         };
 
-        let res = await axios.post(url,body,{
+        let res = await axios.post(url, body, {
             headers
         });
         console.log("res: ", res)
@@ -101,7 +101,7 @@ export class OllamaTranslate implements ITranslate {
     link(content: string, { to = 'auto' }: ITranslateOptions) {
         console.log("link")
         let str = `http://localhost:11434/api/chat`;
-        return `[ChatGPT](${str})`;
+        return `[Ollama](${str})`;
     }
 
     isSupported(src: string) {

@@ -4,7 +4,7 @@ import { OllamaTranslate } from './ollamaTranslate';
 
 export function activate(context: vscode.ExtensionContext) {
 	
-
+    console.log('Congratulations, your extension "comment-translate-ollama" is now active!')
 	//Expose the plug-in
 	return {
         extendTranslate: function (registry: ITranslateRegistry) {
